@@ -2,8 +2,13 @@ import express from 'express';
 import bookRoutes from './routes/bookRoutes';
 import userRoutes from './routes/userRoutes';
 import checkoutRoutes from './routes/checkoutRoutes';
+import cors from 'cors';
 
 const app = express();
+
+// TODO: Disable in Prod
+// Enable CORS for all origins
+app.use(cors());
 
 // Middlewares
 app.use(express.json());
