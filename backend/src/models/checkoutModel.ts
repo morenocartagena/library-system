@@ -14,7 +14,12 @@ const CheckoutSchema: Schema = new Schema(
         bookId: { type: mongoose.Types.ObjectId, ref: 'Book', required: true },
         checkoutDate: { type: Date, required: true, default: Date.now }, 
         returnDate: { type: Date }, 
-        status: { type: String, required: true, default: 'checked_out' }, 
+        status: {
+            type: String,
+            enum: ['checked_out', 'returned'],
+            required: true,
+            default: 'checked_out'
+        },  
     },
     {
         timestamps: true, 
