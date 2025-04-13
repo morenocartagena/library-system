@@ -5,11 +5,13 @@ import BookDetails from "./components/BookDetails";
 import Checkouts from "./components/Checkouts";
 import MyCheckouts from "./components/MyCheckouts";
 import AddUser from "./components/AddUser";
-import AddBook from './components/AddBook';
+import AddBook from "./components/AddBook";
+import NavBar from "./components/NavBar";
     
 const App: React.FC = () => {
     return (
         <Router>
+            <NavBar />
             <Routes>
                 <Route path="/" element={<Navigate to="/home" />} />
                 <Route path="/home" element={<BookSearch />} />
