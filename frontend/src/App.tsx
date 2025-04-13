@@ -4,8 +4,8 @@ import BookSearch from "./components/BookSearch";
 import BookDetails from "./components/BookDetails";
 import Checkouts from "./components/Checkouts";
 import MyCheckouts from "./components/MyCheckouts";
-
-
+import AddUser from "./components/AddUser";
+    
 const App: React.FC = () => {
     return (
         <Router>
@@ -15,6 +15,7 @@ const App: React.FC = () => {
                 <Route path="/book-details/:id" element={<BookDetails />} />
                 <Route path="/checkouts" element={<Checkouts />} />
                 <Route path="/my-checkouts" element={<MyCheckouts />} />
+                <Route path="/add-user" element={<AddUser />} />
             </Routes>
         </Router>
     );
