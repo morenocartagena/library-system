@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import "../styles/BookSearch.css";
@@ -8,6 +9,7 @@ const BookSearch: React.FC = () => {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("");
   const [books, setBooks] = useState([]);
+  const navigate = useNavigate()
 
   const handleSearch = async () => {
     try {
@@ -22,6 +24,10 @@ const BookSearch: React.FC = () => {
     } catch (error) {
       console.error('Error fetching books:', error);
     }
+  };
+
+  const handleDetails = (id: string) => {
+    navigate(`/book-details/${id}`); 
   };
 
   const searchLabel =
@@ -76,7 +82,10 @@ const BookSearch: React.FC = () => {
                     <span className="bse-details-span">
                         {book.title} by {book.author}
                     </span>
-                    <button className="bse-details-button" onClick={handleSearch}>See details</button>
+                    <button 
+                      className="bse-details-button" 
+                      onClick={() => handleDetails(book._id)}>See details
+                    </button>
                 </div>
             </div>
         ))}
