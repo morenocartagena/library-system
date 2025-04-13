@@ -5,6 +5,7 @@ import BookDetails from "./components/BookDetails";
 import Checkouts from "./components/Checkouts";
 import MyCheckouts from "./components/MyCheckouts";
 import AddUser from "./components/AddUser";
+import AddBook from './components/AddBook';
     
 const App: React.FC = () => {
     return (
@@ -16,6 +17,7 @@ const App: React.FC = () => {
                 <Route path="/checkouts" element={<Checkouts />} />
                 <Route path="/my-checkouts" element={<MyCheckouts />} />
                 <Route path="/add-user" element={<AddUser />} />
+                <Route path="/add-book" element={<AddBook />} />
             </Routes>
         </Router>
     );
