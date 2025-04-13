@@ -15,6 +15,7 @@
     "@types/react": "^19.1.1",
     "@types/react-dom": "^19.1.2",
     "axios": "^1.8.4",
+    "jquery": "^3.7.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.5.0",
@@ -45,5 +46,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "typed-css-modules": "^0.9.1"
   }
 }

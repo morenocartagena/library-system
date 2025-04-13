@@ -9,8 +9,8 @@ export const getAllBooks = async (req: Request, res: Response) => {
     try {
         const filter: any = {};
         if (search) filter.title = { $regex: search, $options: 'i' }; // Case-insensitive title search
-        if (author) filter.author = author; // Filter by author
-        if (genre) filter.genre = genre; // Filter by author
+        if (author) filter.author = { $regex: author, $options: 'i' }; // Filter by author
+        if (genre) filter.genre = { $regex: genre, $options: 'i' }; // Filter by genre
 
         const books = await BookModel.find(filter); 
         res.status(200).json(books); 
