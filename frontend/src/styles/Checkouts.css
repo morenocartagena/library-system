@@ -1,0 +1,59 @@
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.chk-details {
+    
+}
+
+.chk-div-img {
+    flex-shrink: 0;
+}
+
+.chk-img {
+    width: 250px;
+    height: auto;
+}
+
+.chk-div-table {
+    flex-grow: 1;
+}
+
+.chk-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.chk-table td {
+    padding: 10px;
+    border: 1.5px solid #ddd; 
+}
+
+.chk-table th {
+    padding: 10px;
+    background-color: #f4f4f4;
+    border: 1.5px solid #ddd; 
+    text-align: center;
+}
+
+.chk-td {
+    font-weight: bold; 
+}
+
+.chk-button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    display: block; 
+    margin: 0 auto; 
+}
+
+.chk-button:hover {
+    background-color: #0056b3;
+}

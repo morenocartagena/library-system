@@ -116,3 +116,29 @@ export const getActiveCheckouts: RequestHandler = async (req, res): Promise<void
         }
     }
 };
+
+// GET: Fetch all active checkouts for a specific user
+export const getUserCheckouts: RequestHandler<{ userid: string }> = async (req, res): Promise<void> => {
+    const { userid } = req.params;
+
+    try {
+        if (!mongoose.Types.ObjectId.isValid(userid)) {
+            res.status(400).json({ message: 'Invalid user ID format' });
+            return;
+        }
+
+        // Query all checkouts for the specified user with status 'checked_out'
+        const userCheckouts = await CheckoutModel.find({ userId: userid, status: 'checked_out' })
+            .populate('bookId')
+            .populate('userId');
+
+        res.status(200).json({ message: 'User checkouts retrieved successfully', userCheckouts });
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(500).json({ message: 'Error retrieving user checkouts', error: error.message });
+        } else {
+            res.status(500).json({ message: 'Unknown error occurred' });
+        }
+    }
+};
+

@@ -1,5 +1,10 @@
 import { Router } from 'express';
-import { createCheckout, markAsReturned, getActiveCheckouts } from '../controllers/checkoutController';
+import { 
+  createCheckout, 
+  markAsReturned, 
+  getActiveCheckouts, 
+  getUserCheckouts // Importa el controlador para los checkouts de usuario
+} from '../controllers/checkoutController';
 
 const router = Router();
 
@@ -11,5 +16,8 @@ router.put('/:id/return', markAsReturned);
 
 // Fetch all active checkouts
 router.get('/active', getActiveCheckouts);
+
+// Fetch all checkouts for a specific user
+router.get('/user/:userid', getUserCheckouts);
 
 export default router;
