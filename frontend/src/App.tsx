@@ -9,24 +9,30 @@ import AddBook from "./components/AddBook";
 import NavBar from "./components/NavBar";
 import Login from "./components/Login";
 import Logout from "./components/Logout";
-    
+import ProtectedRoute from "./components/ProtectedRoute";
+
 const App: React.FC = () => {
-    return (
-        <Router>
-            <NavBar />
-            <Routes>
-                <Route path="/" element={<Navigate to="/home" />} />
-                <Route path="/home" element={<BookSearch />} />
-                <Route path="/book-details/:id" element={<BookDetails />} />
-                <Route path="/checkouts" element={<Checkouts />} />
-                <Route path="/my-checkouts" element={<MyCheckouts />} />
-                <Route path="/add-user" element={<AddUser />} />
-                <Route path="/add-book" element={<AddBook />} />
-                <Route path="/logout" element={<Logout />} />
-                <Route path="/login" element={<Login />} />
-            </Routes>
-        </Router>
-    );
+  return (
+    <Router>
+      <NavBar />
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/Logout" element={<Logout />} />
+
+        {/* Protected routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/home" element={<BookSearch />} />
+          <Route path="/book-details/:id" element={<BookDetails />} />
+          <Route path="/checkouts" element={<Checkouts />} />
+          <Route path="/my-checkouts" element={<MyCheckouts />} />
+          <Route path="/add-user" element={<AddUser />} />
+          <Route path="/add-book" element={<AddBook />} />
+        </Route>
+      </Routes>
+    </Router>
+  );
 };
 
 export default App;

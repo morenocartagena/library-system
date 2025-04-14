@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, RequestHandler } from 'express';
 import bcrypt from 'bcryptjs';
 import UserModel from '../models/userModel'; 
 
@@ -32,4 +32,28 @@ export const getAllUsers = async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ message: 'Error retrieving users', error });
     }
+};
+
+export const getUserIdByEmail: RequestHandler = async (req, res) => {
+  const { email } = req.params;
+
+  if (!email) {
+    res.status(400).json({ message: 'Email parameter is required.' });
+    return;
+  }
+
+  try {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      res.status(404).json({ message: 'User not found.' });
+      return;
+    }
+
+    res.status(200).json({ id: user._id });
+    return;
+  } catch (error: any) {
+    console.error('Error fetching user id by email:', error);
+    res.status(500).json({ message: 'Server error.', error: error.message });
+    return;
+  }
 };

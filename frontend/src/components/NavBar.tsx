@@ -1,51 +1,81 @@
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import '../styles/NavBar.css';
+import React, { useState, useEffect } from "react";
+import { Link, useMatch } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import "../styles/NavBar.css";
 
 const NavBar: React.FC = () => {
-  useEffect(() => {
-    const currentRoute: string = sessionStorage.getItem('currentRoute') || 'Home';
-    console.log(`Route retrieved from sessionStorage: ${currentRoute}`);
-  }, []);
+  const { isAuthenticated, role } = useAuth();
+  const [renderKey, setRenderKey] = useState(0); // Dummy state to force re-render
 
-  const handleNavigation = (route: string): void => {
-    sessionStorage.setItem('currentRoute', route);
-    console.log(`Route saved in sessionStorage: ${route}`);
-  };
+  // Check if the current route matches "/book-details/:id"
+  const match = useMatch("/book-details/:id");
+
+  useEffect(() => {
+    // Update the dummy state whenever isAuthenticated changes to force a re-render
+    setRenderKey((prev) => prev + 1);
+  }, [isAuthenticated]);
 
   return (
-    <nav className="navbar">
+    // Using renderKey as the key to force NavBar re-render when authentication changes
+    <nav className="navbar" key={renderKey}>
       <ul className="navbar-menu">
-        <li className="navbar-item">
-          <Link to="/home" className="navbar-link" onClick={() => handleNavigation('Home')}>
-            Home
-          </Link>
-        </li>
-        <li className="navbar-item">
-          <Link to="/checkouts" className="navbar-link" onClick={() => handleNavigation('Checkouts')}>
-            Checkouts
-          </Link>
-        </li>
-        <li className="navbar-item">
-          <Link to="/my-checkouts" className="navbar-link" onClick={() => handleNavigation('My Checkouts')}>
-            My Checkouts
-          </Link>
-        </li>
-        <li className="navbar-item">
-          <Link to="/add-user" className="navbar-link" onClick={() => handleNavigation('Add User')}>
-            Add User
-          </Link>
-        </li>
-        <li className="navbar-item">
-          <Link to="/add-book" className="navbar-link" onClick={() => handleNavigation('Add Book')}>
-            Add Book
-          </Link>
-        </li>
-        <li className="navbar-item">
-          <Link to="/logout" className="navbar-link" onClick={() => handleNavigation('Logout')}>
-            Logout
-          </Link>
-        </li>
+        {!isAuthenticated ? (
+          <li className="navbar-item">
+            <Link to="/login" className="navbar-link">
+              Login
+            </Link>
+          </li>
+        ) : (
+          <>
+            <li className="navbar-item">
+              <Link to="/home" className="navbar-link">
+                Home
+              </Link>
+            </li>
+            {/* Only show the 'Book Details' link if match exists and has a valid id */}
+            {match && match.params.id && (
+              <li className="navbar-item">
+                <Link
+                  to={`/book-details/${match.params.id}`}
+                  className="navbar-link"
+                >
+                  Book Details
+                </Link>
+              </li>
+            )}
+            {role === "student" && (
+              <li className="navbar-item">
+                <Link to="/my-checkouts" className="navbar-link">
+                  My Checkouts
+                </Link>
+              </li>
+            )}
+            {role === "librarian" && (
+              <>
+                <li className="navbar-item">
+                  <Link to="/checkouts" className="navbar-link">
+                    Checkouts
+                  </Link>
+                </li>
+                <li className="navbar-item">
+                  <Link to="/add-user" className="navbar-link">
+                    Add User
+                  </Link>
+                </li>
+                <li className="navbar-item">
+                  <Link to="/add-book" className="navbar-link">
+                    Add Book
+                  </Link>
+                </li>
+              </>
+            )}
+            <li className="navbar-item">
+              <Link to="/logout" className="navbar-link">
+                Logout
+              </Link>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );

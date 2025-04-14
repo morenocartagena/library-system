@@ -15,7 +15,6 @@ interface Checkout {
 }
 
 const MyCheckouts: React.FC = () => {
-  const userId = "67f98c236d36397521068372";
   const [checkouts, setCheckouts] = useState<Checkout[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,17 +22,38 @@ const MyCheckouts: React.FC = () => {
   useEffect(() => {
     const fetchCheckouts = async () => {
       try {
-        const response = await axios.get(`http://localhost:3010/my-u-library/checkouts/user/${userId}`);
-        setCheckouts(response.data.userCheckouts || []);
+        const email = sessionStorage.getItem("email");
+        if (!email) {
+          setError("The user's email was not found in the session.");
+          setLoading(false);
+          return;
+        }
+
+        const userIdResponse = await axios.get(
+          `http://localhost:3010/my-u-library/users/email/${email}`
+        );
+
+        const userId = userIdResponse.data.id;
+        if (!userId) {
+          setError("The userId was not found for the provided email.");
+          setLoading(false);
+          return;
+        }
+
+        const checkoutsResponse = await axios.get(
+          `http://localhost:3010/my-u-library/checkouts/user/${userId}`
+        );
+
+        setCheckouts(checkoutsResponse.data.userCheckouts || []);
         setLoading(false);
-      } catch {
-        setError("Error fetching user's checkouts");
+      } catch (error: any) {
+        setError("Failed to retrieve user checkouts");
         setLoading(false);
       }
     };
 
     fetchCheckouts();
-  }, [userId]);
+  }, []);
 
   if (loading) {
     return <p>Loading checkouts...</p>;
