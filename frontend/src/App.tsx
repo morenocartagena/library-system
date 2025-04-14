@@ -7,6 +7,8 @@ import MyCheckouts from "./components/MyCheckouts";
 import AddUser from "./components/AddUser";
 import AddBook from "./components/AddBook";
 import NavBar from "./components/NavBar";
+import Login from "./components/Login";
+import Logout from "./components/Logout";
     
 const App: React.FC = () => {
     return (
@@ -20,6 +22,8 @@ const App: React.FC = () => {
                 <Route path="/my-checkouts" element={<MyCheckouts />} />
                 <Route path="/add-user" element={<AddUser />} />
                 <Route path="/add-book" element={<AddBook />} />
+                <Route path="/logout" element={<Logout />} />
+                <Route path="/login" element={<Login />} />
             </Routes>
         </Router>
     );
