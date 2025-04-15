@@ -8,8 +8,10 @@ import cors from 'cors';
 const app = express();
 
 // TODO: Disable in Prod
-// Enable CORS for all origins
-//app.use(cors());
+// Enable CORS for frontend
+app.use(cors({ 
+    origin: 'https://my-u-library-o87c.onrender.com'
+  }));
 
 // Middlewares
 app.use(express.json());
