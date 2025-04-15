@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 import "../styles/BookDetails.css";
 import books1 from "../images/books1.png";
+
+interface CustomJwtPayload {
+  email: string;
+  role: string;
+}
 
 const BookDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -15,13 +21,16 @@ const BookDetails: React.FC = () => {
     genre: string;
     stock: number 
   } | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
-  const userId = "67f98c236d36397521068372";
+  const API_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const fetchBookDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:3010/my-u-library/books/${id}`);
+        const response = await axios.get(`/my-u-library/books/${id}`);
         setBook(response.data.book);
       } catch (error) {
         console.error("Error fetching book details:", error);
@@ -31,16 +40,50 @@ const BookDetails: React.FC = () => {
     fetchBookDetails();
   }, [id]);
 
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode<CustomJwtPayload>(token);
+      setEmail(decodedToken.email);
+      setRole(decodedToken.role); // Extraer el rol del usuario
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      if (!email) return;
+
+      try {
+        const response = await axios.get(`${API_URL}/my-u-library/users/email/${email}`);
+        setUserId(response.data.id);
+      } catch (error) {
+        console.error("Error fetching user ID:", error);
+      }
+    };
+
+    fetchUserId();
+  }, [email, API_URL]);
+
   if (!book) {
     return <p>Loading book details...</p>;
   }
 
   const handleButtonClick = async () => {
+    if (role === "librarian") {
+      navigate("/home");
+      return;
+    }
+
+    if (!userId) {
+      console.error("User ID not found.");
+      return;
+    }
+
     if (book.stock === 0) {
       navigate("/home");
     } else {
       try {
-        await axios.post("http://localhost:3010/my-u-library/checkouts", {
+        await axios.post(`${API_URL}/my-u-library/checkouts`, {
           bookId: id,
           userId: userId,
         });
@@ -72,7 +115,7 @@ const BookDetails: React.FC = () => {
                     className="bde-button"
                     onClick={handleButtonClick}
                   >
-                    {book.stock === 0 ? "Not available. Return Home" : "Checkout this book"}
+                    {role === "librarian" ? "Return Home" : book.stock === 0 ? "Not available. Return Home" : "Checkout this book"}
                   </button>
                 </td>
               </tr>

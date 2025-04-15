@@ -20,10 +20,12 @@ const Checkouts: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const fetchCheckouts = async () => {
       try {
-        const response = await axios.get("http://localhost:3010/my-u-library/checkouts/active");
+        const response = await axios.get(`${API_URL}/my-u-library/checkouts/active`);
         setCheckouts(response.data.activeCheckouts);
         setLoading(false);
       } catch (error) {
@@ -33,11 +35,11 @@ const Checkouts: React.FC = () => {
     };
 
     fetchCheckouts();
-  }, []);
+  }, [API_URL]);
 
   const markBookAsReturned = async (checkoutId: string) => {
     try {
-      await axios.put(`http://localhost:3010/my-u-library/checkouts/${checkoutId}/return`);
+      await axios.put(`${API_URL}/my-u-library/checkouts/${checkoutId}/return`);
       alert("Book marked as returned!");
       const updatedCheckouts = checkouts.filter((checkout) => checkout._id !== checkoutId);
       setCheckouts(updatedCheckouts);

@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3010/my-u-library/auth/";
+const API_URL = process.env.REACT_APP_API_URL;
+const URL = `${API_URL}/my-u-library/auth/`;
 
 interface AuthResponse {
   token: string;
@@ -9,7 +10,7 @@ interface AuthResponse {
 
 const login = (email: string, password: string): Promise<AuthResponse> => {
   return axios
-    .post<AuthResponse>(API_URL + "login", { email, password })
+    .post<AuthResponse>(URL + "login", { email, password })
     .then((response) => {
       if (response.data.token) {
         // Save the token and email in sessionStorage

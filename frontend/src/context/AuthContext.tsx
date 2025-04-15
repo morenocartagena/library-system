@@ -1,6 +1,6 @@
-import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
+import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from "react";
 import authService from "../services/authService";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 interface JwtPayload {
   id: string;
@@ -10,6 +10,7 @@ interface JwtPayload {
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  setIsAuthenticated: (auth: boolean) => void;
   email: string | null;
   role: string | null;
   token: string | null;
@@ -27,7 +28,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticatedState] = useState(false);
+
+  const setIsAuthenticated = useCallback((auth: boolean) => {
+    setIsAuthenticatedState(auth);
+  }, []);
 
   const login = async (emailInput: string, password: string): Promise<void> => {
     await authService.login(emailInput, password);
@@ -58,10 +63,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setRole(decoded.role);
       setIsAuthenticated(true);
     }
-  }, []);
+  }, [setIsAuthenticated]);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, email, role, token, login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, setIsAuthenticated, email, role, token, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

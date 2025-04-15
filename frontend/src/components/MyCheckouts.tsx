@@ -1,38 +1,52 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import "../styles/Checkouts.css";
 
 interface Checkout {
   _id: string;
-  bookId: {
-    title: string;
-  };
-  userId: {
-    firstName: string;
-    lastName: string;
-  };
+  bookId: { title: string };
+  userId: { firstName: string; lastName: string };
   createdAt: string;
+}
+
+interface CustomJwtPayload {
+  id: string;
+  email: string;
+  role: string;
+  iat: number;
+  exp: number;
 }
 
 const MyCheckouts: React.FC = () => {
   const [checkouts, setCheckouts] = useState<Checkout[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+
+    if (token) {
+      const decodedToken = jwtDecode<CustomJwtPayload>(token);
+      setEmail(decodedToken.email); 
+    } else {
+      setError("No token found in session storage.");
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchCheckouts = async () => {
+      if (!email) return;
+
       try {
-        const email = sessionStorage.getItem("email");
-        if (!email) {
-          setError("The user's email was not found in the session.");
-          setLoading(false);
-          return;
-        }
-
         const userIdResponse = await axios.get(
-          `http://localhost:3010/my-u-library/users/email/${email}`
+          `${API_URL}/my-u-library/users/email/${email}`
         );
-
+        
         const userId = userIdResponse.data.id;
         if (!userId) {
           setError("The userId was not found for the provided email.");
@@ -41,7 +55,7 @@ const MyCheckouts: React.FC = () => {
         }
 
         const checkoutsResponse = await axios.get(
-          `http://localhost:3010/my-u-library/checkouts/user/${userId}`
+          `${API_URL}/my-u-library/checkouts/user/${userId}`
         );
 
         setCheckouts(checkoutsResponse.data.userCheckouts || []);
@@ -53,7 +67,7 @@ const MyCheckouts: React.FC = () => {
     };
 
     fetchCheckouts();
-  }, []);
+  }, [email, API_URL]); 
 
   if (loading) {
     return <p>Loading checkouts...</p>;

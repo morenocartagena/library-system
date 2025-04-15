@@ -10,9 +10,11 @@ import NavBar from "./components/NavBar";
 import Login from "./components/Login";
 import Logout from "./components/Logout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 const App: React.FC = () => {
   return (
+    <AuthProvider>
     <Router>
       <NavBar />
       <Routes>
@@ -32,6 +34,7 @@ const App: React.FC = () => {
         </Route>
       </Routes>
     </Router>
+    </AuthProvider>
   );
 };
 

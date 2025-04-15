@@ -11,13 +11,15 @@ const BookSearch: React.FC = () => {
   const [books, setBooks] = useState([]);
   const navigate = useNavigate()
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const handleSearch = async () => {
     try {
-      let searchUrl = `http://localhost:3010/my-u-library/books?search=${query}`;
+      let searchUrl = `${API_URL}/my-u-library/books?search=${query}`;
       if (filter === 'author') {
-        searchUrl = `http://localhost:3010/my-u-library/books?author=${query}`;
+        searchUrl = `${API_URL}/my-u-library/books?author=${query}`;
       } else if (filter === 'genre') {
-        searchUrl = `http://localhost:3010/my-u-library/books?genre=${query}`;
+        searchUrl = `${API_URL}/my-u-library/books?genre=${query}`;
       }
       const response = await axios.get(searchUrl);
       setBooks(response.data);

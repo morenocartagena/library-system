@@ -4,19 +4,29 @@ import { useAuth } from "../context/AuthContext";
 import "../styles/NavBar.css";
 
 const NavBar: React.FC = () => {
-  const { isAuthenticated, role } = useAuth();
-  const [renderKey, setRenderKey] = useState(0); // Dummy state to force re-render
+  const { isAuthenticated, role, setIsAuthenticated } = useAuth();
+  
+  const [renderKey, setRenderKey] = useState(0);
 
-  // Check if the current route matches "/book-details/:id"
   const match = useMatch("/book-details/:id");
 
   useEffect(() => {
-    // Update the dummy state whenever isAuthenticated changes to force a re-render
-    setRenderKey((prev) => prev + 1);
-  }, [isAuthenticated]);
+    const handleAuthChange = () => {
+      setIsAuthenticated(!!sessionStorage.getItem("token"));
+      setRenderKey((prev) => prev + 1); // Force re-render
+    };
+
+    window.addEventListener("storage", handleAuthChange);
+    return () => window.removeEventListener("storage", handleAuthChange);
+  }, [setIsAuthenticated]);
+
+  /*const handleLogout = () => {
+    sessionStorage.removeItem("token");
+    setIsAuthenticated(false);
+    setRenderKey((prev) => prev + 1); // Force re-render
+  };*/
 
   return (
-    // Using renderKey as the key to force NavBar re-render when authentication changes
     <nav className="navbar" key={renderKey}>
       <ul className="navbar-menu">
         {!isAuthenticated ? (
@@ -32,7 +42,6 @@ const NavBar: React.FC = () => {
                 Home
               </Link>
             </li>
-            {/* Only show the 'Book Details' link if match exists and has a valid id */}
             {match && match.params.id && (
               <li className="navbar-item">
                 <Link
@@ -70,9 +79,9 @@ const NavBar: React.FC = () => {
               </>
             )}
             <li className="navbar-item">
-              <Link to="/logout" className="navbar-link">
-                Logout
-              </Link>
+                  <Link to="/logout" className="navbar-link">
+                    Logout
+                  </Link>
             </li>
           </>
         )}

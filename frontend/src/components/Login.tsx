@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import "../styles/Auth.css";
 
 const Login: React.FC = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -15,11 +17,7 @@ const Login: React.FC = () => {
     setError(null);
 
     try {
-      const response = await axios.post("http://localhost:3010/my-u-library/auth/login", {
-        email,
-        password,
-      });
-      sessionStorage.setItem("token", response.data.token);
+      await login(email, password);
       navigate("/home");
     } catch (err: any) {
       setError("Invalid credentials or server error.");
@@ -54,7 +52,7 @@ const Login: React.FC = () => {
           />
         </div>
         {error && <p className="error">{error}</p>}
-        <br></br>
+        <br />
         <button type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>

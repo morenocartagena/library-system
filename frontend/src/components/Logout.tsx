@@ -1,12 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import '../styles/Auth.css';
+import { useAuth } from "../context/AuthContext";
+import "../styles/Auth.css";
 
 const Logout: React.FC = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth(); // Se obtiene la función logout del contexto
 
   const handleLogout = (): void => {
-    sessionStorage.removeItem("token");
+    logout(); // Actualiza el estado global y limpia tokens
     navigate("/login");
   };
 

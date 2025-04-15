@@ -10,13 +10,15 @@ const AddUser: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
 
     try {
-      await axios.post("http://localhost:3010/my-u-library/users", {
+      await axios.post(`${API_URL}/my-u-library/users`, {
         firstName,
         lastName,
         email,
