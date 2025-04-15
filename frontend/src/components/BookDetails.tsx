@@ -30,7 +30,7 @@ const BookDetails: React.FC = () => {
   useEffect(() => {
     const fetchBookDetails = async () => {
       try {
-        const response = await axios.get(`/my-u-library/books/${id}`);
+        const response = await axios.get(`${API_URL}/my-u-library/books/${id}`);
         setBook(response.data.book);
       } catch (error) {
         console.error("Error fetching book details:", error);
@@ -38,7 +38,7 @@ const BookDetails: React.FC = () => {
     };
 
     fetchBookDetails();
-  }, [id]);
+  }, [id, API_URL]);
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
